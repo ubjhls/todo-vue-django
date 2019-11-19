@@ -5,8 +5,17 @@ from .models import Todo
 from .serializers import TodoSerializers
 
 # Create your views here.
-@api_view(['GET'])
+
+# Get /todos/ : 전체 todos
+# POST /todos/ : todos 등록
+@api_view(['GET', 'POST'])
 def todo_index_create(request):
-    todos = Todo.objects.all()
-    serializers = TodoSerializers(todos, many=True)
-    return Response(serializers.data)
+    if request.method == 'GET':
+        todos = Todo.objects.all()
+        serializers = TodoSerializers(todos, many=True)
+        return Response(serializers.data)
+    else:
+        serializers = TodoSerializers(data=request.POST)
+        if serializers.is_valid(raise_exception=True):
+            serializers.save()
+            return Response(serializers.data)
