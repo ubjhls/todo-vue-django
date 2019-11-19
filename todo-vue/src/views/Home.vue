@@ -10,6 +10,7 @@
 <script>
 // @ is an alias to /src
 import axios from 'axios'
+import jwtDecode from 'jwt-decode'
 import TodoList from '@/components/TodoList.vue'
 import TodoForm from '@/components/TodoForm.vue'
 
@@ -29,6 +30,13 @@ export default {
     todoCreate(title) {
       console.log('==부모컴포넌트==')
       console.log(title)
+      this.$session.start()
+      const token = this.$session.get('jwt')
+      const options = {
+        headers: {
+          Authorization: `JWT ${token}`
+        }
+      }
       // axios 요청 POST /todos/
       // const data = {
       //   title: title,
@@ -37,8 +45,8 @@ export default {
       // request.POST인 경우는 반드시 FormData !!
       const formData = new FormData()
       formData.append('title', title)
-      formData.append('user', 1)
-      axios.post('http://127.0.0.1:8000/api/v1/todos/', formData)
+      formData.append('user', jwtDecode(token).user_id)
+      axios.post('http://127.0.0.1:8000/api/v1/todos/', formData, options)
       .then(response => {
         console.log(response)
         this.todos.push(response.data)
@@ -56,6 +64,7 @@ export default {
           Authorization: `JWT ${token}`
         }
       }
+      console.log(jwtDecode(token))
       axios.get('http://127.0.0.1:8000/api/v1/todos/', options)
       .then(response => {
         console.log(response) // 만약 오류가 발생하게 되면 ESLint 설정을 package.json에 추가
