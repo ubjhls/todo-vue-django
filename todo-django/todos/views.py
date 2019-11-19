@@ -30,3 +30,18 @@ def user_detail(request, id):
     user = get_object_or_404(User, pk=id)
     serailizers = UserSerializers(user)
     return Response(serailizers.data)
+
+# PUT /todos/1/ 1번 todo수정
+# DELETE /todos/1/ 1번 todo삭제
+@api_view(['PUT', 'DELETE'])
+def todo_update_delete(request, id):
+    todo = get_object_or_404(Todo, pk=id)
+    if request.method =='PUT':
+        serializers = TodoSerializers(data=request.data, instance=todo)
+        if serializers.is_valid(raise_exception=True):
+            serializers.save()
+            return Response(serailizers.data)
+    else:
+        todo.delete()
+        # HTTP 상태코드 204
+        return Response({'message': '삭제되었음'})
