@@ -49,7 +49,7 @@ export default {
         })
         },
     updateTodo(todo) {
-            this.$session.start()
+        this.$session.start()
         const token = this.$session.get('jwt')
         const options = {
         headers: {
