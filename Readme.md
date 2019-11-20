@@ -215,3 +215,9 @@ $ npm i jwt-decode
 
 ## 7. User별 Todo
 
+### 1. Dajngo
+
+### 2. Vue
+
+## 8. 비로그인시 로그인 페이지로 이동
+
